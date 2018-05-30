@@ -79,42 +79,6 @@ public:
 
 	void Autonomous()
 	{
-		//m_driveSystem->arcadeDrive(0.0, 0.85);
-		//frc::Wait(5.0);
-		//std::cout << "test" << std::endl;
-		//m_driveSystem->arcadeDrive(0.0, 0.0);
-
-		/*
-		autoClock.Start();
-		autoTimeLast = (autoClock.Get());
-		autoTimeCurrent = autoTimeLast;
-		while ((autoTimeCurrent - autoTimeLast) <= 0.6)
-		{
-			m_driveSystem->arcadeDrive(0.0, 0.75);
-			autoTimeCurrent = (autoClock.Get());
-		}
-		m_driveSystem->arcadeDrive(-1.0, 0.0);
-		frc::Wait(0.05);
-		m_driveSystem->arcadeDrive(0.0, 0.0);
-
-
-
-		autoClock.Start();
-		double distance = 0;
-
-		autoTimeLast = (autoClock.Get());
-		autoTimeCurrent = autoTimeLast;
-		while ((autoTimeCurrent - autoTimeLast) <= 2 && distance <= 60)
-		{
-			m_driveSystem->arcadeDrive(1.0, 0.0);
-			autoTimeCurrent = (autoClock.Get());
-			distance = m_ultrasonicFrontLeft->sonarRange();
-		}
-		m_driveSystem->arcadeDrive(-1.0, 0.0);
-		frc::Wait(0.05);
-		m_driveSystem->arcadeDrive(0.0, 0.0);
-		*/
-
 		std::string gameData;
 		std::string placement;
 
@@ -192,28 +156,11 @@ public:
 				}
 			}
 		}
-
-		/*
-		bool brake = false;
-		while (IsAutonomous() && IsEnabled())
-		{
-			while (m_ultrasonicFrontLeft->sonarRange() > 30)
-			{
-				m_driveSystem->arcadeDrive(0.75, 0.0);
-				brake = true;
-			}
-			if (brake)
-			{
-				m_driveSystem->arcadeDrive(-1.0, 0.0);
-				frc::Wait(0.01);
-				brake = false;
-			}
-		}
-		*/
 	}
 
 	void OperatorControl() override
 	{
+		//variables yeah
 		int liftRevolutions = 0;
 		float dashboardSlider0;
 		float rangeInchesFL = 0.0;
@@ -223,6 +170,7 @@ public:
 		float rangeInchesLIFT = 0.0;
 		double liftHeight = 0.0;
 
+		//Sets the channels for the joysticks
 		LeftDriveJoystick.SetXChannel(joystick_x_channel);
 		LeftDriveJoystick.SetYChannel(joystick_y_channel);
 		RightDriveJoystick.SetXChannel(joystick_x_channel);
@@ -234,8 +182,9 @@ public:
 		//m_driveSystem->moveCtrl = RightDriveJoystick.GetYChannel();
 		//m_driveSystem->rotateCtrl = LeftDriveJoystick.GetXChannel();
 		//m_driveSystem->reverseDrive = 1;
-		//1 for driver station and -1 for xbox
+		/////////////1 for driver station and -1 for xbox
 
+		//the stuffs for the winch system
 		m_winchSystem->fwdDrive = Axis_XBOX::XBOX_RIGHT_TRIGGER;
 		m_winchSystem->bckDrive = Axis_XBOX::XBOX_LEFT_TRIGGER;
 		m_winchSystem->multiMove = true;
@@ -244,16 +193,9 @@ public:
 
 		while (IsOperatorControl() && IsEnabled())
 		{
-			//Limit Switch used for Resets
-			//if (m_resetLimitSwitch)
-			//{
-			//	liftEncoder->Reset();
-			//}
-
 			liftRevolutions = liftEncoder->Get();
 
-//			std::cout << "liftRevolutions: " << liftRevolutions << std::endl;
-
+			//Xbox Start button turns on and off the plexiglass lights
 			if(XboxController.GetRawButton(Button_XBOX::XBOX_START))
 			{
 				m_plexiglassLightControl->Set(!m_plexiglassLightControl->Get());
@@ -366,6 +308,7 @@ public:
 			}
 			*/
 
+			//grabber opening and closing
 			if (OPENPRESS)
 			{
 				openGrabber(grabber_speed);
@@ -375,11 +318,13 @@ public:
 				closeGrabber(grabber_speed);
 			}
 
+			//linear actuator that keeps the hook from falling off
+			//locks the hook
 			if (LogitechController.GetRawButton(Button_LOGITECH::LOGITECH_LEFT_BUMPER))
 			{
 				m_winchLockMotor->ExtendMax();
 			}
-
+			//releases the hook
 			if (LogitechController.GetRawButton(Button_LOGITECH::LOGITECH_RIGHT_BUMPER))
 			{
 				m_winchLockMotor->ExtendMin();
@@ -411,11 +356,10 @@ public:
 			RightDriveJoystickX = RightDriveJoystick.GetX();
 			RightDriveJoystickY = RightDriveJoystick.GetY();
 
-
+			//A bunch of variables and things that gets outputted to the SmartDashboard so we can see whats happening
 			SmartDashboard::PutString("DB/String 2", "bL: " + std::to_string(m_blockLeftLimitSwitch->Get()) + " bR: " + std::to_string(m_blockRightLimitSwitch->Get()) + " r: " + std::to_string(m_robotLimitSwitch->Get()));
 			//SmartDashboard::PutString("DB/String 3", "current: " + std::to_string(pdp->GetCurrent(14)));
 			SmartDashboard::PutString("DB/String 3", "leftjoyY: " + std::to_string(LeftDriveJoystickY));
-
 			SmartDashboard::PutString("DB/String 4", "ultraLIFT " + std::to_string(rangeInchesLIFT) + " inches");
 			SmartDashboard::PutString("DB/String 5", "ultraFL: " + std::to_string(rangeInchesFL) + " inches");
 			SmartDashboard::PutString("DB/String 6", "ultraFR: " + std::to_string(rangeInchesFR) + " inches");
@@ -494,26 +438,9 @@ private:
 	frc::Spark* m_winchMotor = new frc::Spark(Channel_PWM::WINCH_MOTOR);
 	frc::Spark* m_placeholderMotor = new frc::Spark(Channel_PWM::PLACEHOLDER_MOTOR);
 
-	bool driveMode = SmartDashboard::GetBoolean("DB/Button 0", false);
 
-
-	//if (driveMode)
-	//{
-		//frc::Joystick XboxController { Channel_Controller::XBOX_CONTROLLER };
-	//}
-	//else
-	//{
-		//frc::Joystick LeftDriveJoystick { Channel_Controller::LEFT_DRIVE_JOYSTICK };
-		//frc::Joystick RightDriveJoystick { Channel_Controller::RIGHT_DRIVE_JOYSTICK };
-	//}
-
-
-//	frc::Joystick LeftDriveJoystick { Channel_Controller::LEFT_DRIVE_JOYSTICK };
-//	frc::Joystick RightDriveJoystick { Channel_Controller::RIGHT_DRIVE_JOYSTICK };
-
-
-	//&RightDriveJoystick and &LeftDriveJoystick for driver station
-	//&XboxController and &XboxController
+	//&RightDriveJoystick and &LeftDriveJoystick for Driver Station
+	//&XboxController and &XboxController for XBOX Controller
 	BjorgDrive* m_driveSystem = new BjorgDrive(m_leftMotor, m_rightMotor, &XboxController, &XboxController);
 	BjorgDrive* m_winchSystem = new BjorgDrive(m_winchMotor, m_placeholderMotor, &XboxController, &XboxController);
 
@@ -548,6 +475,7 @@ private:
 	const std::string kAutoNameDefault = "Default";
 	const std::string kAutoNameCustom = "My Auto";
 
+	//there be a lot of stuff here
 	static constexpr double lift_up_dur = .5;
 	static constexpr double lift_down_dur = .5;
 	static constexpr double lift_up_speed = 0.5;
@@ -585,13 +513,6 @@ private:
 	double grabberOpenTimeCurrent = 0;
 	double grabberCloseTimeLast = 0;
 	double grabberCloseTimeCurrent = 0;
-
-	/*
-	std::string autoInputFix(std::string input)
-	{
-		if (input == "Left" || input == "left" || input == "LEFT")
-	}
-	*/
 
 	void openGrabber(double speed)
 	{
