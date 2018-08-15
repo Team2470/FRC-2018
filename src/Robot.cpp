@@ -365,7 +365,6 @@ public:
 			SmartDashboard::PutString("DB/String 6", "ultraFR: " + std::to_string(rangeInchesFR) + " inches");
 			SmartDashboard::PutString("DB/String 7", "ultraBR: " + std::to_string(rangeInchesBR) + " inches");
 			SmartDashboard::PutString("DB/String 8", "ultraBL: " + std::to_string(rangeInchesBL) + " inches");
-			//SmartDashboard::PutString("DB/String 3")
 			SmartDashboard::PutString("DB/String 9", std::to_string(m_liftMotor->GetSpeed()) + "state" + std::to_string(DPAD_State) + "dpad" + std::to_string(LogitechController.GetPOV()));
 
 			frc::Wait(0.005);
@@ -785,6 +784,7 @@ private:
 		////////////////////////////////////////////////////LOWER LIFT/////////////////////////////////////
 	}
 
+	//I don't remember how this works but it does work
 	void DpadLift()
 	{
 		int DPAD_Value = LOGITECH_RELEASED;
