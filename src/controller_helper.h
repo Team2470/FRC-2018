@@ -86,28 +86,28 @@ enum Axis_Generic
 
 enum Generic_Controller_Left
 {
-	BUTTON_BLUE_TOP_LEFT = 1,
-	BUTTON_BLUE_TOP_RIGHT = 2,
-	BUTTON_BLUE_BOTTOM_LEFT = 3,
-	BUTTON_BLUE_BOTTOM_RIGHT = 4,
-	SWITCH_ARCADE_RIGHT = 5,
-	SWITCH_ARCADE_LEFT = 6,
-	SWITCH_A,
-	SWITCH_B,
-	SELECT,//Probably will be used for autonomous selection, it is the knob with 10 different positions.
+	BUTTON_BLUE_TOP_LEFT = 1,			//Generic Arcade Buttons
+	BUTTON_BLUE_TOP_RIGHT = 2,			//Generic Arcade Buttons
+	BUTTON_BLUE_BOTTOM_LEFT = 3,		//Generic Arcade Buttons
+	BUTTON_BLUE_BOTTOM_RIGHT = 4,		//Generic Arcade Buttons
+	SWITCH_ARCADE_RIGHT = 5,			//Covered Switch
+	SWITCH_ARCADE_LEFT = 6,				//Covered Switch
+	SWITCH_A,							//Generic Switch
+	SWITCH_B,							//Generic Switch
+	ROTARY_SELECT						//Probably will be used for autonomous selection, it is the knob with 10 different positions.
 };
 
 enum Generic_Controller_Right
 {
-	BUTTON_RED_TOP = 1,
-	BUTTON_RED_LEFT = 2,
-	BUTTON_RED_RIGHT = 3,
-	BUTTON_RED_BOTTOM = 4,
-	SWITCH_SAFE1 = 5,
-	SWITCH_SAFE2 = 6,
-	SWITCH_SAFE3 = 7,
-	SWITCH_X = 8,
-	SWITCH_Y = 9,
-	BUTTON_FIRE,
-	BUTTON_RELEASE
+	BUTTON_RED_TOP = 1,					//Generic Arcade Buttons
+	BUTTON_RED_LEFT = 2,				//Generic Arcade Buttons
+	BUTTON_RED_RIGHT = 3,				//Generic Arcade Buttons
+	BUTTON_RED_BOTTOM = 4,				//Generic Arcade Buttons
+	SWITCH_SAFE1 = 5,					//Covered Switch
+	SWITCH_SAFE2 = 6,					//Covered Switch
+	SWITCH_SAFE3 = 7,					//Locking Switch
+	SWITCH_X = 8,						//Generic Switch
+	SWITCH_Y = 9,						//Generic Switch
+	BUTTON_FIRE,						//Elevator Style Buttons
+	BUTTON_RELEASE						//Elevator Style Buttons
 };
