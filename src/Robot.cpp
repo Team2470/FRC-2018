@@ -162,11 +162,18 @@ public:
 	{
 		//variables yeah
 		int liftRevolutions = 0;
-		float dashboardSlider0;
-		float rangeInchesFL = 0.0;
-		float rangeInchesFR = 0.0;
-		float rangeInchesBR = 0.0;
-		float rangeInchesBL = 0.0;
+
+		//Dashboard Variables
+		float dashboardSlider0;				//Numeric Slider from the SmartDashboard (#0)
+		float dashboardSlider1;				//Numeric Slider from the SmartDashboard (#1)
+		float dashboardSlider2;				//Numeric Slider from the SmartDashboard (#2)
+		float dashboardSlider3;				//Numeric Slider from the SmartDashboard (#3)
+
+		//Sensor Variables
+		float rangeInchesFL = 0.0;			//Ultrasonic Sensor (Front Left)
+		float rangeInchesFR = 0.0;			//Ultrasonic Sensor (Front Right)
+		float rangeInchesBR = 0.0;			//Ultrasonic Sensor (Back Right)
+		float rangeInchesBL = 0.0;			//Ultrasonic Sensor (Back Left)
 		float rangeInchesLIFT = 0.0;
 		double liftHeight = 0.0;
 
@@ -176,9 +183,11 @@ public:
 		RightDriveJoystick.SetXChannel(joystick_x_channel);
 		RightDriveJoystick.SetYChannel(joystick_y_channel);
 
+		//First three commands for the xbox controller
 		m_driveSystem->moveCtrl = Axis_XBOX::XBOX_RIGHT_JOYSTICK_Y;
 		m_driveSystem->rotateCtrl = Axis_XBOX::XBOX_LEFT_JOYSTICK_X;
 		m_driveSystem->reverseDrive = -1;
+		//Last three commands for the driver station
 		//m_driveSystem->moveCtrl = RightDriveJoystick.GetYChannel();
 		//m_driveSystem->rotateCtrl = LeftDriveJoystick.GetXChannel();
 		//m_driveSystem->reverseDrive = 1;
@@ -203,6 +212,9 @@ public:
 
 			//Dashboard variables
 			dashboardSlider0 = SmartDashboard::GetNumber("DB/Slider 0", 0.0);
+			dashboardSlider1 = SmartDashboard::GetNumber("DB/Slider 1", 0.0);
+			dashboardSlider2 = SmartDashboard::GetNumber("DB/Slider 2", 0.0);
+			dashboardSlider3 = SmartDashboard::GetNumber("DB/Slider 3", 0.0);
 
 			//Sensor variables
 			rangeInchesFL = m_ultrasonicFrontLeft->sonarRange();
@@ -218,7 +230,7 @@ public:
 			m_winchSystem->arcadeDrive();
 
 
-			//If the A button is pressed the motor speeds are halved
+			//If the A button is pressed the motor speeds are halved?
 			if (LogitechController.GetRawButton(Button_LOGITECH::LOGITECH_BACK))
 			{
 				m_driveSystem->motorMultiplier = 0.0;
@@ -319,14 +331,14 @@ public:
 			}
 
 			//linear actuator that keeps the hook from falling off
-			//locks the hook
 			if (LogitechController.GetRawButton(Button_LOGITECH::LOGITECH_LEFT_BUMPER))
 			{
+				//Extends the locking actuator
 				m_winchLockMotor->ExtendMax();
 			}
-			//releases the hook
 			if (LogitechController.GetRawButton(Button_LOGITECH::LOGITECH_RIGHT_BUMPER))
 			{
+				//Retracts the locking actuator
 				m_winchLockMotor->ExtendMin();
 			}
 
@@ -351,6 +363,7 @@ public:
 
 			XPRESS = liftPortal(XPRESS);
 
+			//Gets the values of the x and y axis for each of the driver joysticks
 			LeftDriveJoystickX = LeftDriveJoystick.GetX();
 			LeftDriveJoystickY = LeftDriveJoystick.GetY();
 			RightDriveJoystickX = RightDriveJoystick.GetX();
@@ -373,12 +386,13 @@ public:
 
 	void Test() override
 	{
-
+		//We never used this, but it would let us test things out with the driver station test mode (I think)
 	}
 
 private:
 	enum Channel_Controller
 	{
+		//The number correlates to the 'USB Order' number on the driver station
 		XBOX_CONTROLLER = 0,
 		LOGITECH_CONTROLLER = 1,
 		LEFT_DRIVE_JOYSTICK = 2,
@@ -389,6 +403,7 @@ private:
 
 	enum Channel_Analog
 	{
+		//Channels for the analog sensors on the roboRIO
 		ULTRASONIC_SENSOR_FRONT_LEFT = 0,
 		ULTRASONIC_SENSOR_FRONT_RIGHT = 1,
 		ULTRASONIC_SENSOR_BACK_RIGHT = 2,
@@ -401,6 +416,7 @@ private:
 
 	enum Channel_PWM
 	{
+		//Channels for the PWM motors on the roboRIO
 		LEFT_MOTOR = 0,
 		RIGHT_MOTOR = 1,
 		LIFT_MOTOR = 2,
@@ -413,6 +429,7 @@ private:
 
 	enum Channel_Digital
 	{
+		//Channels for the digital sensors on the roboRIO
 		PLEXIGLASS_LIGHT_CONTROL = 0,
 		LIMITSWITCH_ROBOT = 1,
 		LIMITSWITCH_BLOCK_LEFT = 2,
@@ -425,6 +442,7 @@ private:
 
 	DPad_LOGITECH DPAD_State = DPad_LOGITECH::LOGITECH_STOP_BRAKE;
 
+	//Our joysticks (includes the xbox and logitech controllers)
 	frc::Joystick XboxController { Channel_Controller::XBOX_CONTROLLER };
 	frc::Joystick LogitechController { Channel_Controller::LOGITECH_CONTROLLER };
 	frc::Joystick LeftDriveJoystick { Channel_Controller::LEFT_DRIVE_JOYSTICK };
@@ -432,23 +450,26 @@ private:
 	frc::Joystick RightDriveJoystick { Channel_Controller::RIGHT_DRIVE_JOYSTICK };
 	frc::Joystick TriggerJoystick { Channel_Controller::TRIGGER_JOYSTICK };
 
+	//Our standalone spark motors
 	frc::Spark* m_leftMotor = new frc::Spark(Channel_PWM::LEFT_MOTOR);
 	frc::Spark* m_rightMotor = new frc::Spark(Channel_PWM::RIGHT_MOTOR);
 	frc::Spark* m_winchMotor = new frc::Spark(Channel_PWM::WINCH_MOTOR);
 	frc::Spark* m_placeholderMotor = new frc::Spark(Channel_PWM::PLACEHOLDER_MOTOR);
 
-
+	//Our BjorgDrive systems for driving the robot and for using the winch, the function takes in two motors and two joysticks from above
 	//&RightDriveJoystick and &LeftDriveJoystick for Driver Station
 	//&XboxController and &XboxController for XBOX Controller
 	BjorgDrive* m_driveSystem = new BjorgDrive(m_leftMotor, m_rightMotor, &XboxController, &XboxController);
 	BjorgDrive* m_winchSystem = new BjorgDrive(m_winchMotor, m_placeholderMotor, &XboxController, &XboxController);
 
+	//Our MaxSonar (ultrasonic) sensors, takes the sensor channel and the specific type of MaxSonar sensor
 	MaxSonar* m_ultrasonicFrontLeft = new MaxSonar(Channel_Analog::ULTRASONIC_SENSOR_FRONT_LEFT, Ultrasonic_Sensor_Type::LV);
 	MaxSonar* m_ultrasonicFrontRight = new MaxSonar(Channel_Analog::ULTRASONIC_SENSOR_FRONT_RIGHT, Ultrasonic_Sensor_Type::LV);
 	MaxSonar* m_ultrasonicBackRight = new MaxSonar(Channel_Analog::ULTRASONIC_SENSOR_BACK_RIGHT, Ultrasonic_Sensor_Type::LV);
 	MaxSonar* m_ultrasonicBackLeft = new MaxSonar(Channel_Analog::ULTRASONIC_SENSOR_BACK_LEFT, Ultrasonic_Sensor_Type::LV);
 	MaxSonar* m_ultrasonicLift = new MaxSonar(Channel_Analog::ULTRASONIC_SENSOR_LIFT, Ultrasonic_Sensor_Type::HRLV);
 
+	//Our Infrared sensors, takes the sensor channel and the specific type of infrared sensor
 	Infrared* m_liftLongRange = new Infrared(Channel_Analog::INFRARED_SENSOR_LIFT_LONG, Infrared_Sensor_Type::GP2Y0A710K0F);
 	Infrared* m_liftShortRange = new Infrared(Channel_Analog::INFRARED_SENSOR_LIFT_SHORT, Infrared_Sensor_Type::GP2Y0A02YK0F);
 //	Infrared* m_irFrontLeft = new Infrared(Channel_Analog::INFRARED_SENSOR_FRONT_LEFT, Infrared_Sensor_Type::OPB732WZ);
@@ -456,25 +477,32 @@ private:
 //	Infrared* m_irBackLeft = new Infrared(Channel_Analog::INFRARED_SENSOR_BACK_LEFT, Infrared_Sensor_Type::OPB732WZ);
 //	Infrared* m_irBackRight = new Infrared(Channel_Analog::INFRARED_SENSOR_BACK_RIGHT, Infrared_Sensor_Type::OPB732WZ);
 
+	//Our Encoder, takes in two channels, ?, and ?
 	frc::Encoder* liftEncoder = new Encoder(Channel_Digital::ENCODER_LIFT_A, Channel_Digital::ENCODER_LIFT_B, false, Encoder::k4X);
 
+	//Our linear actuators, takes the PWM channel for the motor
 	//Actuator* m_actuatorMotor = new Actuator(Channel_PWM::ACTUATOR_MOTOR);
 	Actuator* m_winchLockMotor = new Actuator(Channel_PWM::WINCH_LOCK_MOTOR);
 
+	//Our generic motors, take the PWM channel and the motor tpype
 	Motor* m_liftMotor = new Motor(Channel_PWM::LIFT_MOTOR, Motor_Type::SPARK);
 	Motor* m_grabberMotor = new Motor(Channel_PWM::GRABBER_MOTOR, Motor_Type::SPARK);
 
+	//Our digital sensors, takes the channel for the sensor
 	frc::DigitalInput* m_robotLimitSwitch = new frc::DigitalInput(Channel_Digital::LIMITSWITCH_ROBOT);
 	frc::DigitalInput* m_blockLeftLimitSwitch = new frc::DigitalInput(Channel_Digital::LIMITSWITCH_BLOCK_LEFT);
 	frc::DigitalInput* m_blockRightLimitSwitch = new frc::DigitalInput(Channel_Digital::LIMITSWITCH_BLOCK_RIGHT);
 
+	//Light control for the lights on the plexiglass
 	frc::DigitalOutput* m_plexiglassLightControl = new frc::DigitalOutput(Channel_Digital::PLEXIGLASS_LIGHT_CONTROL);
 
+	//Sendable chooser for autonomous that we never used
 	frc::SendableChooser<std::string> m_chooser;
 	const std::string kAutoNameDefault = "Default";
 	const std::string kAutoNameCustom = "My Auto";
 
-	//there be a lot of stuff here
+	//////////////////there be a lot of stuff here
+	//constant variables
 	static constexpr double lift_up_dur = .5;
 	static constexpr double lift_down_dur = .5;
 	static constexpr double lift_up_speed = 0.5;
@@ -490,6 +518,7 @@ private:
 	static const int joystick_x_channel = 1;
 	static const int joystick_y_channel = 0;
 
+	//Other variables
 	bool longRange = false;
 	bool XPRESS = false;
 	bool OPENPRESS = false;
@@ -503,6 +532,7 @@ private:
 	double TriggerJoystickX = 0;
 	double TriggerJoystickY = 0;
 
+	//(Probably) all of the timer related stuff
 	frc::Timer robotClock;
 	double liftTimeLast = 0;
 	double liftTimeCurrent = 0;
@@ -512,6 +542,11 @@ private:
 	double grabberOpenTimeCurrent = 0;
 	double grabberCloseTimeLast = 0;
 	double grabberCloseTimeCurrent = 0;
+
+	//Custom Functions
+	//Custom Functions
+	//Custom Functions
+	//Custom Functions
 
 	void openGrabber(double speed)
 	{
