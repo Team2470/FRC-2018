@@ -67,13 +67,13 @@ public:
 
 	void RobotInit()
 	{
+		//Sendable chooser stuff that we did not use
 		m_chooser.AddDefault(kAutoNameDefault, kAutoNameDefault);
 		m_chooser.AddObject(kAutoNameCustom, kAutoNameCustom);
 		frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+
 		m_plexiglassLightControl->Set(true);
-
 		robotClock.Start();
-
 		liftEncoder->Reset();
 	}
 
@@ -91,25 +91,18 @@ public:
 
 		gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
 
-//		std::cout << "Placement: " << placement << std::endl;
-//		std::cout << "gameData: " << gameData << std::endl;
-
 		if (gameData.length() > 0)
 		{
 			if (gameData[0] == 'L')
 			{
 				//Our color is left on our switch
-
 				if (autoLeft == true)
 				{
-//					std::cout << "Left Placement and Left Switch" << std::endl;
-
 					//autoPlaceSwitch(Left);
 					autoCrossLine();
 				}
 				else if (autoRight == true)
 				{
-//					std::cout << "Right Placement and Left Switch" << std::endl;
 					autoCrossLine();
 				}
 				else if (switchLeft == true)
@@ -122,7 +115,6 @@ public:
 				}
 				else
 				{
-//					std::cout << "ELSE" << std::endl;
 					autoCrossLine();
 				}
 			}
@@ -131,13 +123,10 @@ public:
 				//Our color is right on our switch
 				if (autoLeft == true)
 				{
-//					std::cout << "Left Placement and Right Switch" << std::endl;
 					autoCrossLine();
-
 				}
 				else if (autoRight == true)
 				{
-//					std::cout << "Right Placement and Right Switch" << std::endl;
 					//autoPlaceSwitch(Right);
 					autoCrossLine();
 				}
@@ -151,7 +140,6 @@ public:
 				}
 				else
 				{
-//					std::cout << "ELSE" << std::endl;
 					autoCrossLine();
 				}
 			}
@@ -184,13 +172,13 @@ public:
 		RightDriveJoystick.SetYChannel(joystick_y_channel);
 
 		//First three commands for the xbox controller
-		m_driveSystem->moveCtrl = Axis_XBOX::XBOX_RIGHT_JOYSTICK_Y;
-		m_driveSystem->rotateCtrl = Axis_XBOX::XBOX_LEFT_JOYSTICK_X;
-		m_driveSystem->reverseDrive = -1;
+		//m_driveSystem->moveCtrl = Axis_XBOX::XBOX_RIGHT_JOYSTICK_Y;
+		//m_driveSystem->rotateCtrl = Axis_XBOX::XBOX_LEFT_JOYSTICK_X;
+		//m_driveSystem->reverseDrive = -1;
 		//Last three commands for the driver station
-		//m_driveSystem->moveCtrl = RightDriveJoystick.GetYChannel();
-		//m_driveSystem->rotateCtrl = LeftDriveJoystick.GetXChannel();
-		//m_driveSystem->reverseDrive = 1;
+		m_driveSystem->moveCtrl = RightDriveJoystick.GetYChannel();
+		m_driveSystem->rotateCtrl = LeftDriveJoystick.GetXChannel();
+		m_driveSystem->reverseDrive = 1;
 		/////////////1 for driver station and -1 for xbox
 
 		//the stuffs for the winch system
@@ -256,7 +244,7 @@ public:
 			}
 			*/
 
-			if (LogitechController.GetRawButton(Button_LOGITECH::LOGITECH_Y) && !LogitechController.GetRawButton(Button_LOGITECH::LOGITECH_A))
+			if (RightButtonHub.GetRawButton(Generic_Controller_Right::BUTTON_RED_LEFT) && !RightButtonHub.GetRawButton(Generic_Controller_Right::BUTTON_RED_RIGHT))
 			{
 				//Extends the actuator to pinch a block
 				//m_actuatorMotor->ExtendBlockMax();
@@ -266,7 +254,7 @@ public:
 				grabberCloseTimeLast = (robotClock.Get());
 				CLOSEPRESS = true;
 			}
-			else if (!LogitechController.GetRawButton(Button_LOGITECH::LOGITECH_Y) && LogitechController.GetRawButton(Button_LOGITECH::LOGITECH_A))
+			else if (!RightButtonHub.GetRawButton(Generic_Controller_Right::BUTTON_RED_LEFT) && RightButtonHub.GetRawButton(Generic_Controller_Right::BUTTON_RED_RIGHT))
 			{
 				//Retracts the actuator to release a block
 				//m_actuatorMotor->ExtendBlockMin();
@@ -393,12 +381,14 @@ private:
 	enum Channel_Controller
 	{
 		//The number correlates to the 'USB Order' number on the driver station
-		XBOX_CONTROLLER = 0,
-		LOGITECH_CONTROLLER = 1,
-		LEFT_DRIVE_JOYSTICK = 2,
-		BUTTON_JOYSTICK = 3,
-		RIGHT_DRIVE_JOYSTICK = 4,
-		TRIGGER_JOYSTICK = 5
+		XBOX_CONTROLLER = 0,				//When we are using the logitech and xbox controllers
+		//The logitech controller and the trigger joystick share the same channel because the FRC driver station only allows for 6 (0-5) channels
+		LOGITECH_CONTROLLER = 1,			//When we are using the logitech and xbox controllers
+		//TRIGGER_JOYSTICK = 1,				//When we are using the driver station
+		LEFT_DRIVE_JOYSTICK = 2,			//When we are using the driver station
+		LEFT_BUTTON_HUB = 3,				//When we are using the driver station
+		RIGHT_DRIVE_JOYSTICK = 4,			//When we are using the driver station
+		RIGHT_BUTTON_HUB = 5				//When we are using the driver station
 	};
 
 	enum Channel_Analog
@@ -442,13 +432,14 @@ private:
 
 	DPad_LOGITECH DPAD_State = DPad_LOGITECH::LOGITECH_STOP_BRAKE;
 
-	//Our joysticks (includes the xbox and logitech controllers)
+	//Our joysticks (includes the xbox and logitech controllers, the arcadee joysticks, and the button hubs)
 	frc::Joystick XboxController { Channel_Controller::XBOX_CONTROLLER };
 	frc::Joystick LogitechController { Channel_Controller::LOGITECH_CONTROLLER };
+	//frc::Joystick TriggerJoystick { Channel_Controller::TRIGGER_JOYSTICK };
 	frc::Joystick LeftDriveJoystick { Channel_Controller::LEFT_DRIVE_JOYSTICK };
-	frc::Joystick ButtonJoystick { Channel_Controller::BUTTON_JOYSTICK };
+	frc::Joystick LeftButtonHub { Channel_Controller::LEFT_BUTTON_HUB };
 	frc::Joystick RightDriveJoystick { Channel_Controller::RIGHT_DRIVE_JOYSTICK };
-	frc::Joystick TriggerJoystick { Channel_Controller::TRIGGER_JOYSTICK };
+	frc::Joystick RightButtonHub { Channel_Controller::RIGHT_BUTTON_HUB };
 
 	//Our standalone spark motors
 	frc::Spark* m_leftMotor = new frc::Spark(Channel_PWM::LEFT_MOTOR);
@@ -459,7 +450,7 @@ private:
 	//Our BjorgDrive systems for driving the robot and for using the winch, the function takes in two motors and two joysticks from above
 	//&RightDriveJoystick and &LeftDriveJoystick for Driver Station
 	//&XboxController and &XboxController for XBOX Controller
-	BjorgDrive* m_driveSystem = new BjorgDrive(m_leftMotor, m_rightMotor, &XboxController, &XboxController);
+	BjorgDrive* m_driveSystem = new BjorgDrive(m_leftMotor, m_rightMotor, &RightDriveJoystick, &LeftDriveJoystick);
 	BjorgDrive* m_winchSystem = new BjorgDrive(m_winchMotor, m_placeholderMotor, &XboxController, &XboxController);
 
 	//Our MaxSonar (ultrasonic) sensors, takes the sensor channel and the specific type of MaxSonar sensor

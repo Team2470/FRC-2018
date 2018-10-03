@@ -92,9 +92,9 @@ enum Generic_Controller_Left
 	BUTTON_BLUE_BOTTOM_RIGHT = 4,		//Generic Arcade Buttons
 	SWITCH_ARCADE_RIGHT = 5,			//Covered Switch
 	SWITCH_ARCADE_LEFT = 6,				//Covered Switch
-	SWITCH_A,							//Generic Switch
-	SWITCH_B,							//Generic Switch
-	ROTARY_SELECT						//Probably will be used for autonomous selection, it is the knob with 10 different positions.
+	SWITCH_B = 7,						//Generic Switch
+	SWITCH_A = 8,						//Generic Switch
+	//ROTARY_SELECT						//Probably will be used for autonomous selection, it is the knob with 10 different positions.
 };
 
 enum Generic_Controller_Right
@@ -107,7 +107,7 @@ enum Generic_Controller_Right
 	BUTTON_RELEASE = 6,					//Elevator Style Buttons
 	SWITCH_SAFE1 = 7,					//Covered Switch
 	SWITCH_SAFE2 = 8,					//Covered Switch
-	SWITCH_SAFE3,						//Locking Switch
-	SWITCH_X,							//Generic Switch
-	SWITCH_Y							//Generic Switch
+	SWITCH_X = 9,						//Generic Switch
+	SWITCH_Y = 10,						//Generic Switch
+	SWITCH_SAFE3 = 11					//Locking Switch
 };
