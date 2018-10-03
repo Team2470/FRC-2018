@@ -815,7 +815,31 @@ private:
 	{
 		int DPAD_Value = LOGITECH_RELEASED;
 
-		DPAD_Value = LogitechController.GetPOV();
+		//Old system that used the actual logitech controller dpad
+		//DPAD_Value = LogitechController.GetPOV();
+
+		//System that should emulate the dpad using two arcade buttons and a safety switch
+		if (RightButtonHub.GetRawButton(Generic_Controller_Right::SWITCH_SAFE1))
+		{
+			if (RightButtonHub.GetRawButton(Generic_Controller_Right::BUTTON_RED_TOP) && !RightButtonHub.GetRawButton(Generic_Controller_Right::BUTTON_RED_BOTTOM))
+			{
+				DPAD_Value = DPad_LOGITECH::LOGITECH_TOP;			//0 degrees
+			}
+			else if (!RightButtonHub.GetRawButton(Generic_Controller_Right::BUTTON_RED_TOP) && RightButtonHub.GetRawButton(Generic_Controller_Right::BUTTON_RED_BOTTOM))
+			{
+				DPAD_Value = DPad_LOGITECH::LOGITECH_BOTTOM;		//180 degrees
+			}
+			else
+			{
+				DPAD_Value = DPad_LOGITECH::LOGITECH_RELEASED;		//-1 'degrees', the value for the figurative dpad being released
+			}
+		}
+		else
+		{
+			DPAD_Value = DPad_LOGITECH::LOGITECH_RELEASED;		//-1 'degrees', the value for the figurative dpad being released
+		}
+
+
 		m_liftMotor->ResetAccelerate();
 
 		switch(DPAD_Value)
