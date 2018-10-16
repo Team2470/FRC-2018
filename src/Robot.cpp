@@ -182,9 +182,14 @@ public:
 		/////////////1 for driver station and -1 for xbox
 
 		//the stuffs for the winch system
-		m_winchSystem->fwdDrive = Axis_XBOX::XBOX_RIGHT_TRIGGER;
-		m_winchSystem->bckDrive = Axis_XBOX::XBOX_LEFT_TRIGGER;
-		m_winchSystem->multiMove = true;
+		//first three for xbox controller
+		//m_winchSystem->fwdDrive = Axis_XBOX::XBOX_RIGHT_TRIGGER;
+		//m_winchSystem->bckDrive = Axis_XBOX::XBOX_LEFT_TRIGGER;
+		//m_winchSystem->multiMove = true;		//enables two button drive which combines the two buttons into one, could ignore this and use the flightstick on the driverstation
+		//last two for driver station
+		m_winchSystem->moveCtrl = FlightJoystick.GetYChannel();
+		m_winchSystem->multiMove = false;
+
 		m_winchSystem->multiRotate = false;
 		m_winchSystem->rotateEnable = false;
 
@@ -384,7 +389,7 @@ private:
 		XBOX_CONTROLLER = 0,				//When we are using the logitech and xbox controllers
 		//The logitech controller and the trigger joystick share the same channel because the FRC driver station only allows for 6 (0-5) channels
 		LOGITECH_CONTROLLER = 1,			//When we are using the logitech and xbox controllers
-		//TRIGGER_JOYSTICK = 1,				//When we are using the driver station
+		FLIGHT_JOYSTICK = 1,				//When we are using the driver station
 		LEFT_DRIVE_JOYSTICK = 2,			//When we are using the driver station
 		LEFT_BUTTON_HUB = 3,				//When we are using the driver station
 		RIGHT_DRIVE_JOYSTICK = 4,			//When we are using the driver station
@@ -435,7 +440,7 @@ private:
 	//Our joysticks (includes the xbox and logitech controllers, the arcadee joysticks, and the button hubs)
 	frc::Joystick XboxController { Channel_Controller::XBOX_CONTROLLER };
 	frc::Joystick LogitechController { Channel_Controller::LOGITECH_CONTROLLER };
-	//frc::Joystick TriggerJoystick { Channel_Controller::TRIGGER_JOYSTICK };
+	frc::Joystick FlightJoystick { Channel_Controller::FLIGHT_JOYSTICK };
 	frc::Joystick LeftDriveJoystick { Channel_Controller::LEFT_DRIVE_JOYSTICK };
 	frc::Joystick LeftButtonHub { Channel_Controller::LEFT_BUTTON_HUB };
 	frc::Joystick RightDriveJoystick { Channel_Controller::RIGHT_DRIVE_JOYSTICK };
@@ -451,7 +456,9 @@ private:
 	//&RightDriveJoystick and &LeftDriveJoystick for Driver Station
 	//&XboxController and &XboxController for XBOX Controller
 	BjorgDrive* m_driveSystem = new BjorgDrive(m_leftMotor, m_rightMotor, &RightDriveJoystick, &LeftDriveJoystick);
-	BjorgDrive* m_winchSystem = new BjorgDrive(m_winchMotor, m_placeholderMotor, &XboxController, &XboxController);
+	//&XboxController and &XboxController for XBOX controller
+	//&FlightStick and &FlightStick for Driver Station
+	BjorgDrive* m_winchSystem = new BjorgDrive(m_winchMotor, m_placeholderMotor, &FlightJoystick, &FlightJoystick);
 
 	//Our MaxSonar (ultrasonic) sensors, takes the sensor channel and the specific type of MaxSonar sensor
 	MaxSonar* m_ultrasonicFrontLeft = new MaxSonar(Channel_Analog::ULTRASONIC_SENSOR_FRONT_LEFT, Ultrasonic_Sensor_Type::LV);
