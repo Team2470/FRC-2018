@@ -1,6 +1,6 @@
 # FRC-2018 Contribution Guidelines
 
-When contributiing to this repository, the following guidelines should be kept in mind: 
+When contributing to this repository, the following guidelines should be kept in mind: 
 
 * We use the [Google C++ Style Guide](https://google.github.io/styleguide/cppguide.html) when writing C++ code and as such, contributions to the repository are also expected to hold to the same guidelines stated there. 
 * Code must be properly documented, that is, functions, structures, classes, enumerations, etc. must all contain proper documentation. We typically write documentation comments in a style similar to that laid out by [Doxygen](http://www.doxygen.org/), but it is fine to submit code with comments formatted in a non-standard way (the comments will often be normalized, however).
