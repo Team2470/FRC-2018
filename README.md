@@ -8,3 +8,6 @@ Robot code for FRC Team BJORG (Team 2470) during the 2017-2018 FIRST POWER UP se
 * [Issue templates](https://github.com/Team2470/FRC-2018/tree/master/.github/ISSUE_TEMPLATE)
   - [Bug report](https://github.com/Team2470/FRC-2018/blob/master/.github/ISSUE_TEMPLATE/bug_report.md)
   - [Feature request](https://github.com/Team2470/FRC-2018/blob/master/.github/ISSUE_TEMPLATE/feature_request.md)
+  
+  
+ *This repo was made in eclipse and has not been updated as of November 13, 2018. Significant changes might be required so that the files are compatible with the newest version of WPIlib and VSCode.*
